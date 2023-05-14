@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MySQL Data</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+    <script>
+        function filterTable() {
+            var table = document.getElementById('data-table');
+            var rows = table.getElementsByTagName('tr');
+            var pageSize = parseInt(document.getElementById('page-size-select').value);
+
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var rowVisible = true;
+                for (var j = 0; j < row.cells.length; j++) {
+                    var cell = row.cells[j];
+                    var input = document.getElementById('input-' + j);
+                    var regex = new RegExp(input.value, 'i');
+                    if (!cell.innerHTML.match(regex)) {
+                        rowVisible = false;
+                        break;
+                    }
+                }
+
+                if (rowVisible) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+
+            var pageLinks = document.getElementsByClassName('page-link');
+            var pageLinksContainer = document.getElementById('page-links');
+            while (pageLinksContainer.firstChild) {
+                pageLinksContainer.removeChild(pageLinksContainer.firstChild);
+            }
+
+            var visibleRows = table.querySelectorAll('tbody tr:not([style*="display: none"])');
+            var numPages = Math.ceil(visibleRows.length / pageSize);
+            for (var i = 0; i < numPages; i++) {
+                var link = document.createElement('a');
+                link.href = '#';
+                link.textContent = i + 1;
+                link.classList.add('page-link');
+                link.onclick = function (event) {
+                    event.preventDefault();
+                    var pageNum = parseInt(this.textContent);
+                    var startIndex = (pageNum - 1) * pageSize;
+                    var endIndex = Math.min(pageNum * pageSize, visibleRows.length);
+                    for (var j = 0; j < visibleRows.length; j++) {
+                        if (j >= startIndex && j < endIndex) {
+                            visibleRows[j].style.display = '';
+                        } else {
+                            visibleRows[j].style.display = 'none';
+                        }
+                    }
+                    updatePageLinkClasses(this);
+                };
+                pageLinksContainer.appendChild(link);
+            }
+
+            updatePageLinkClasses(pageLinksContainer.querySelector('.page-link'));
+
+            function updatePageLinkClasses(activeLink) {
+                for (var i = 0; i < pageLinks.length; i++) {
+                    var link = pageLinks[i];
+                    if (link === activeLink) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            }
+        }
+
+        function changePageSize(size) {
+            // Remove all page links
+            // while (pageLinksContainer.firstChild) {
+            //     pageLinksContainer.removeChild(pageLinksContainer.firstChild);
+            // }
+            var pageLinks = document.getElementsByClassName('page-link');
+            for (var i = 0; i < pageLinks.length; i++) {
+                pageLinks[i].classList.remove('active');
+            }
+            var table = document.getElementById('data-table');
+            var header = table.getElementsByTagName('thead')[0];
+            var body = table.getElementsByTagName('tbody')[0];
+            var rows = body.getElementsByTagName('tr');
+            var numPages = Math.ceil(rows.length / size);
+            for (var i = 0; i < numPages; i++) {
+                var link = document.createElement('a');
+                link.href = '#';
+                link.textContent = i + 1;
+                link.classList.add('page-link');
+                link.onclick = function () {
+                    var pageNum = parseInt(this.textContent);
+                    var startIndex = (pageNum - 1) * size;
+                    var endIndex = Math.min(pageNum * size, rows.length);
+                    for (var j = 0; j < rows.length; j++) {
+                        if (j >= startIndex && j < endIndex) {
+                            rows[j].style.display = '';
+                        } else {
+                            rows[j].style.display = 'none';
+                        }
+                    }
+                    for (var j = 0; j < pageLinks.length; j++) {
+                        pageLinks[j].classList.remove('active');
+                    }
+                    this.classList.add('active');
+                    // Update header display property
+                    header.style.display = '';
+                    for (var j = 0; j < header.cells.length; j++) {
+                        if (header.cells[j].style.display != 'none') {
+                            header.cells[j].style.display = '';
+                        } else {
+                            header.cells[j].style.display = 'none';
+                        }
+                    }
+                }
+                document.getElementById('page-links').appendChild(link);
+            }
+            var firstLink = document.getElementsByClassName('page-link')[0];
+            if (firstLink) {
+                firstLink.click();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            changePageSize(10);
+            document.getElementById('page-size-select').addEventListener('change', function () {
+                var size = parseInt(this.value);
+                var pageLinks = document.getElementsByClassName('page-link');
+                var pageLinksContainer = document.getElementById('page-links');
+                while (pageLinksContainer.firstChild) {
+                    pageLinksContainer.removeChild(pageLinksContainer.firstChild);
+                }
+                changePageSize(size);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h>MySQL Data</h>
+    <div>
+        <h style="font-size: 12px" ; for="page-size-select">Rows per page:</h>
+        <select id="page-size-select">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+        <h style="font-size: 12px" ; id="page-links">Page: </h>
+    </div>
+
+    <table id="data-table">
+        <thead>
+            <tr>
+                {% for field in fields %}
+                <th>
+                    <input type="text" id="input-{{ loop.index0 }}" onkeyup="filterTable({{ loop.index0 }})">
+                    <label for="input-{{ loop.index0 }}">{{ field }}</label>
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for value in row %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

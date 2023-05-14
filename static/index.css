@@ -1,0 +1,81 @@
+/* Set the font family and background color for the body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Set the font size, padding, and background color for the table headers */
+#data-table th {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #364f6b;
+    color: #fff;
+}
+
+/* Set the font size and padding for the table cells */
+#data-table td {
+    font-size: 14px;
+    padding: 8px;
+}
+
+label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+/* Set the width of the input fields */
+#data-table input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 2px solid #364f6b;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+/* Set the background color for the table rows on hover */
+#data-table tbody tr:hover {
+    background-color: #d8d5d5;
+}
+
+/* Set the font size and color for the table row labels */
+#data-table tbody tr td label {
+    font-size: 14px;
+    color: #364f6b;
+    font-weight: bold;
+}
+
+/* Set the styles for the pagination section */
+.page-link {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    font-size: 11px;
+    /* font-weight: 200; */
+    /* line-height: 1.42857143; */
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.page-link:hover {
+    color: #23527c;
+    background-color: #f5f5f5;
+    border-color: #adadad;
+}
+
+.page-link.active {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
