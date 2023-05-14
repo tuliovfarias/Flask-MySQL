@@ -3,6 +3,8 @@ import pymysql
 
 app = Flask(__name__)
 
+table_name = 'table_test'
+
 # MySQL database configuration
 db_config = {
     'host': 'localhost',
@@ -18,7 +20,7 @@ def index():
     conn = pymysql.connect(**db_config)
 
     # Query to retrieve all data from the table
-    query = "SELECT * FROM table_test"
+    query = f"SELECT * FROM {table_name}"
     cursor = conn.cursor()
     cursor.execute(query)
 
@@ -35,7 +37,7 @@ def index():
     conn.close()
 
     # Render the template with the data and field names
-    return render_template('index.html', data=data, fields=fields, fields_length=fields_length)
+    return render_template('index.html', table=table_name, data=data, fields=fields, fields_length=fields_length)
 
 
 if __name__ == '__main__':

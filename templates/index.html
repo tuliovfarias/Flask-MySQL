@@ -142,7 +142,7 @@
 </head>
 
 <body>
-    <h>MySQL Data</h>
+    <h3>Data of {{ table }}</h3>
     <div>
         <h style="font-size: 12px" ; for="page-size-select">Rows per page:</h>
         <select id="page-size-select">
@@ -151,7 +151,8 @@
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
-        <h style="font-size: 12px" ; id="page-links">Page: </h>
+        <h style="font-size: 12px">Page: </h>
+        <h id="page-links"></h>
     </div>
 
     <table id="data-table">
