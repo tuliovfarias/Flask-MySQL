@@ -109,7 +109,7 @@ function changePageSize(size) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    changePageSize(20);
+    changePageSize(document.getElementById('min_rows').value);
     document.getElementById('page-size-select').addEventListener('change', function () {
         var size = parseInt(this.value);
         var pageLinks = document.getElementsByClassName('page-link');
