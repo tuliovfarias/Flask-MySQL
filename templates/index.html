@@ -22,21 +22,19 @@
                         break;
                     }
                 }
-
                 if (rowVisible) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
                 }
             }
-
             var pageLinks = document.getElementsByClassName('page-link');
             var pageLinksContainer = document.getElementById('page-links');
             while (pageLinksContainer.firstChild) {
                 pageLinksContainer.removeChild(pageLinksContainer.firstChild);
             }
-
             var visibleRows = table.querySelectorAll('tbody tr:not([style*="display: none"])');
+            document.getElementById('results').innerHTML = visibleRows.length;
             var numPages = Math.ceil(visibleRows.length / pageSize);
             for (var i = 0; i < numPages; i++) {
                 var link = document.createElement('a');
@@ -59,7 +57,6 @@
                 };
                 pageLinksContainer.appendChild(link);
             }
-
             updatePageLinkClasses(pageLinksContainer.querySelector('.page-link'));
 
             function updatePageLinkClasses(activeLink) {
@@ -72,18 +69,18 @@
                     }
                 }
             }
+
         }
 
         function changePageSize(size) {
-            // Remove all page links
-            // while (pageLinksContainer.firstChild) {
-            //     pageLinksContainer.removeChild(pageLinksContainer.firstChild);
-            // }
             var pageLinks = document.getElementsByClassName('page-link');
+            var table = document.getElementById('data-table');
+            var visibleRows = table.querySelectorAll('tbody tr:not([style*="display: none"])');
+            document.getElementById('results').innerHTML = visibleRows.length;
+
             for (var i = 0; i < pageLinks.length; i++) {
                 pageLinks[i].classList.remove('active');
             }
-            var table = document.getElementById('data-table');
             var header = table.getElementsByTagName('thead')[0];
             var body = table.getElementsByTagName('tbody')[0];
             var rows = body.getElementsByTagName('tr');
@@ -108,15 +105,14 @@
                         pageLinks[j].classList.remove('active');
                     }
                     this.classList.add('active');
-                    // Update header display property
                     header.style.display = '';
-                    for (var j = 0; j < header.cells.length; j++) {
-                        if (header.cells[j].style.display != 'none') {
-                            header.cells[j].style.display = '';
-                        } else {
-                            header.cells[j].style.display = 'none';
-                        }
-                    }
+                    // for (var j = 0; j < header.cells.length; j++) {
+                    //     if (header.cells[j].style.display != 'none') {
+                    //         header.cells[j].style.display = '';
+                    //     } else {
+                    //         header.cells[j].style.display = 'none';
+                    //     }
+                    // }
                 }
                 document.getElementById('page-links').appendChild(link);
             }
@@ -127,7 +123,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            changePageSize(10);
+            changePageSize(20);
             document.getElementById('page-size-select').addEventListener('change', function () {
                 var size = parseInt(this.value);
                 var pageLinks = document.getElementsByClassName('page-link');
@@ -143,16 +139,18 @@
 
 <body>
     <h3>Data of {{ table }}</h3>
+    
     <div>
         <h style="font-size: 12px" ; for="page-size-select">Rows per page:</h>
         <select id="page-size-select">
-            <option value="10">10</option>
-            <option value="25">25</option>
+            <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
         <h style="font-size: 12px">Page: </h>
         <h id="page-links"></h>
+        <h style="font-size: 12px">Results: </h>
+        <h style="font-size: 12px"; id="results"></h>
     </div>
 
     <table id="data-table">
