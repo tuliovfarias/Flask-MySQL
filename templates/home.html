@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Query table</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='base.css') }}">
+
+  <script>
+    function goToPage() {
+      var selectedTable = document.getElementById("options").value;
+      var url = "/" + selectedTable;
+      window.location.href = url;
+    }
+  </script>
+</head>
+<body>
+  <h1>Query table</h1>
+  <label for="options">Select a table to view:</label>
+  <br>
+  <select id="options">
+    {% for table in tables %}
+        <option value="{{ table }}">{{ table }}</option>
+    {% endfor %}    
+  </select>
+  <button onclick="goToPage()">Go</button>
+</body>
+</html>
